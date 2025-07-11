@@ -1,0 +1,18 @@
+[project]
+name = "lightoff_analysis_tool"
+version = "0.1.0"
+description = "tool for analysing lightoff test data"
+authors = [
+    {name = "Tom7998",email = "79639106+Tom7998@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas (>=2.2.3,<3.0.0)",
+    "pandas-stubs (>=2.2.3.250527,<3.0.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
