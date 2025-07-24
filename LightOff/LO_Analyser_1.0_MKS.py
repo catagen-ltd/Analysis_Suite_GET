@@ -7,9 +7,16 @@ Created on Tue Apr 27 11:07:08 2021
 
 import pandas 
 import numpy as np
+import sys
+import os
+
+# Add progress indication and suppress potential pandas output
+import warnings
+warnings.filterwarnings('ignore')
 #import matplotlib.pyplot as plt
 
-def load_data_with_column_padding(filename, expected_columns=76):
+
+def load_data_with_column_padding(filename, expected_columns=78):
     """
     Load data ensuring all rows have expected number of columns
     """
@@ -32,7 +39,7 @@ def load_data_with_column_padding(filename, expected_columns=76):
     df = pandas.DataFrame(padded_data)
     
     # Select only the columns we need and assign names
-    selected_cols = [0,1,4,5,9,10,11,27,44,47,49,50,52,53,54,55,58,59,60,61,62,63,64]
+    selected_cols = [0,1,4,5,9,10,11,27,44,47,49,50,52,53,54,55,58,59,60,61,64,65,66]
     df_selected = df.iloc[:, selected_cols].copy()
     
     # Assign column names
@@ -87,8 +94,8 @@ def validate_and_clean_mks_data(data_frame):
     
     for col in mks_columns:
         if col in cleaned_data.columns:
-            print(f"\n=== Processing {col} ===")
-            print(f"First 10 original values: {cleaned_data[col].head(10).tolist()}")
+            # print(f"\n=== Processing {col} ===")
+            # print(f"First 10 original values: {cleaned_data[col].head(10).tolist()}")
             
             # Convert any blank/empty strings to NaN
             cleaned_data[col] = cleaned_data[col].replace('', np.nan)
@@ -105,7 +112,7 @@ def validate_and_clean_mks_data(data_frame):
             
             # Count original NaN values (after converting blanks)
             original_nan_count = cleaned_data[col].isna().sum()
-            print(f"Total NaN/blank values found: {original_nan_count}")
+            #print(f"Total NaN/blank values found: {original_nan_count}")
             
             # Forward fill missing values (copy previous valid value)
             cleaned_data[col] = cleaned_data[col].fillna(method='ffill')
@@ -118,8 +125,8 @@ def validate_and_clean_mks_data(data_frame):
             filled_count = original_nan_count - remaining_nan
             cleaning_stats[f'{col}_nan_filled'] = filled_count
             
-            print(f"First 10 cleaned values: {cleaned_data[col].head(10).tolist()}")
-            print(f"{original_nan_count} NaN/blank values processed, {filled_count} filled, {remaining_nan} remaining")
+            # print(f"First 10 cleaned values: {cleaned_data[col].head(10).tolist()}")
+            #   print(f"{original_nan_count} NaN/blank values processed, {filled_count} filled, {remaining_nan} remaining")
             
     # Export cleaning report
     export_cleaning_report(data_frame, cleaned_data, cleaning_stats)
@@ -461,10 +468,15 @@ for x in range(0, DLtimesize):
             else:
                 N2_output[x] = MFC_n2[MFCindex]
     else:
-        print(f"No match found for DL_Timestamp[{x}]: '{DL_Timestamp[x]}'")
-        if x < 5:  # Show format differences for first few
+        # Count mismatches instead of printing each one
+        if x == 0:  # Initialize counter on first iteration
+            mismatch_count = 0
+        mismatch_count += 1
+        if x < 5:  # Show format differences for first few only
+            print(f"No match found for DL_Timestamp[{x}]: '{DL_Timestamp[x]}'")
             print(f"Example MFC format: '{MFC_Timestamp[0] if MFC_Timestamp else 'None'}'")
-            
+        elif x == DLtimesize - 1:  # Print summary at the end
+            print(f"Total timestamp mismatches: {mismatch_count}")
 
 timesize=np.size(DL_Time)
 Oxidisation_variable=np.zeros(timesize)
@@ -658,14 +670,14 @@ if (L1_reductionpoint +100)>=L2_reductionpoint>0:
             HC_reductionvariable[x]=0
         if HC_reductionvariable[x]==1 and HC_reductionvariable[x-1]==0:
             HC_reductionpoint=x
-            print(HC_reductionpoint)
-            print("a")
+            # print(HC_reductionpoint)
+            # print("a")
             break
     for y in range(HC_reductionpoint,timesize):
         if Hc_in[y]<133:
             HCin_endpoint=y
-            print(HCin_endpoint)
-            print("b")
+            # print(HCin_endpoint)
+            # print("b")
             NO_startpoint=y
             break
     for x in range (HCout_startpoint,timesize):
@@ -675,14 +687,14 @@ if (L1_reductionpoint +100)>=L2_reductionpoint>0:
             HCout_reductionvariable[x]=0
         if HCout_reductionvariable[x]==1 and HCout_reductionvariable[x-1]==0:
             HC_reductionpoint=x
-            print(HC_reductionpoint)
-            print("c")
+            # print(HC_reductionpoint)
+            # print("c")
             break
     for y in range(HC_reductionpoint,timesize):
         if Hc_out[y]<133:
             HCout_endpoint=y
-            print(HCout_endpoint)
-            print("d")
+            # print(HCout_endpoint)
+            # print("d")
             NOout_startpoint=y
             break
     if HCin_endpoint>0:
@@ -690,10 +702,10 @@ if (L1_reductionpoint +100)>=L2_reductionpoint>0:
     else:
         HCin_latency=COin_latency
     if HCout_endpoint>0:
-        print("hc latency")
-        print(HCout_endpoint)
-        print("reduction endpoint")
-        print(Reduction_endpoint2)
+        # print("hc latency")
+        # print(HCout_endpoint)
+        # print("reduction endpoint")
+        # print(Reduction_endpoint2)
         HCout_latency=HCout_endpoint-Reduction_endpoint2
     else:
         HCout_latency=COout_latency
@@ -762,7 +774,7 @@ if (L1_oxidisationpoint+100)>=L2_oxidisationpoint>0:
             NOout_endpoint=y
             break 
     if NOin_endpoint>0:
-        print("firrst latency")
+        # print("firrst latency")
         NOin_latency=NOin_endpoint-Oxidisation_endpoint2           
     else:
         #NOin_latency=O2in_latency
@@ -958,7 +970,7 @@ Concentration_Calc_df = pandas.DataFrame({
 })
 
 Concentration_Calc_df.to_csv("C:/PythonAnalyser/Concentration_Calculations.csv", index=False)
-print("Concentration calculation breakdown exported to: C:/PythonAnalyser/Concentration_Calculations.csv")
+#print("Concentration calculation breakdown exported to: C:/PythonAnalyser/Concentration_Calculations.csv")
 
 # Simple MFC vs Set point tracking
 # Check array lengths before creating DataFrame
