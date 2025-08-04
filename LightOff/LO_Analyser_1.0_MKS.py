@@ -39,11 +39,11 @@ def load_data_with_column_padding(filename, expected_columns=78):
     df = pandas.DataFrame(padded_data)
     
     # Select only the columns we need and assign names
-    selected_cols = [0,1,4,5,9,10,11,27,44,47,49,50,52,53,54,55,58,59,60,61,64,65,66]
+    selected_cols = [0,1,4,5,9,10,11,27,44,47,49,50,52,53,54,55,58,59,60,61,65,66,67]
     df_selected = df.iloc[:, selected_cols].copy()
     
     # Assign column names
-    cols=['Date','Time','lambda_1','lambda_2','Inlet_temp','Bed_temp','Other_temp',"In_test",'CO_1','O2_1','HC_1','NO_1','CO_2','O2_2','HC_2','NO_2','CO_3','O2_3','HC_3','NO_3','MKS_NO','MKS_CO','MKS_HC']
+    cols=['Date','Time','lambda_1','lambda_2','Inlet_temp','Bed_temp','Other_temp',"In_test",'CO_1','O2_1','HC_1','NO_1','CO_2','O2_2','HC_2','NO_2','CO_3','O2_3','HC_3','NO_3','MKS_HC','MKS_CO','MKS_NO']
     df_selected.columns = cols
     
     # Convert numeric columns, treating padded zeros and blanks as NaN
